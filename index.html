@@ -5,81 +5,227 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NFC Trinkspiel</title>
   <style>
-    body {
-      font-family: sans-serif;
+    body{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #ff8a00, #e52e71);
+      font-family: 'Segoe UI', sans-serif;
       text-align: center;
-      padding: 2rem;
-      background-color: #f7f7f7;
+      color: white;
     }
+
     .card {
-      background: white;
+      background: rgba(255, 255, 255, 0.1);
       padding: 2rem;
-      border-radius: 16px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
       max-width: 500px;
       margin: auto;
+      animation: fadeIn 1s ease-in-out;
     }
-    h1 {
-      font-size: 2rem;
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     .task, .pass-on {
-      font-size: 1.5rem;
-      margin: 1rem 0;
+      font-size: 1.6rem;
+      margin: 1.2rem 0;
+    }
+    .pass-on {
+      display: none;
+      font-style: italic;
+      color: #ffdbdb;
     }
     button {
       padding: 0.75rem 1.5rem;
       font-size: 1rem;
       border: none;
-      border-radius: 8px;
-      background-color: #ff3366;
-      color: white;
+      border-radius: 10px;
+      background-color: #ffffff;
+      color: #e52e71;
       cursor: pointer;
-      margin-top: 1rem;
+      margin: 0.5rem;
+      transition: all 0.2s ease;
     }
     button:hover {
-      background-color: #e62859;
+      background-color: #ffdbdb;
+    }
+    .toggle-container {
+      margin: 1.5rem 0 0.5rem;
+    }
+    .toggle-container input[type="checkbox"] {
+      display: none;
+    }
+    .toggle-label {
+      display: inline-block;
+      background: white;
+      color: #e52e71;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+    .toggle-label:hover {
+      background: #ffdbdb;
+    }
+    .toggle-container input[type="checkbox"]:checked + .toggle-label {
+      background: #e52e71;
+      color: white;
     }
   </style>
 </head>
 <body>
   <div class="card">
-    <h1>🎉 Trinkspiel 🎉</h1>
-    <div class="task" id="task">Scanne den NFC-Tag oder drücke den Button!</div>
+    <div class="task" id="task">Scanne den NFC-Tag oder starte eine Runde!</div>
+    <button onclick="newRound()">🎲 Neue Aufgabe</button>
     <div class="pass-on" id="passOn"></div>
-    <button onclick="newRound()">Neue Aufgabe</button>
+    <button onclick="showPassOn()" id="showPassOnBtn" style="display:none;">👉 Weitergabe anzeigen</button>
+    <div class="toggle-container">
+      <input type="checkbox" id="hardcoreToggle">
+      <label for="hardcoreToggle" class="toggle-label">🧨 Hardcore-Modus</label>
+    </div>
   </div>
 
   <script>
-    const tasks = [
-      "Trinke 2 Schlucke 🍻",
-      "Tausche dein Getränk mit deinem linken Nachbarn",
-      "Erfinde eine neue Regel",
-      "Sing ein Lied oder trink 3 Schlucke",
-      "Alle mit weißen Socken trinken",
-      "Stelle dem nächsten eine peinliche Frage",
-      "Wähle jemanden, der trinken muss",
-      "Letzter, der aufsteht, trinkt"
+    const tasksNormal = [
+        "Trinke 2 Schlucke",
+        "Tausche dein Getränk mit deinem linken Nachbarn",
+        "Erfinde eine neue Regel",
+        "Sing ein Lied oder trink 3 Schlucke",
+        "Alle mit weißen Socken trinken",
+        "Stelle dem nächsten eine peinliche Frage",
+        "Wähle jemanden, der trinken muss",
+        "Letzter, der aufsteht, trinkt",
+        "Erzähle eine peinliche Geschichte",
+        "Mache jemandem ein Kompliment",
+        "Spiele eine Runde Flaschendrehen",
+        "Sprich 10 Sekunden in einer fremden Sprache",
+        "Sage das Alphabet rückwärts",
+        "Stelle dich pantomimisch dar – alle müssen raten",
+        "Trinke mit der schwachen Hand",
+        "Erzähle deinen Spitznamen aus der Kindheit",
+        "Führe einen TikTok-Tanz vor",
+        "Alle mit Jeans trinken",
+        "Zeige dein Lieblingsfoto auf dem Handy",
+        "Imitiere einen Promi – alle müssen raten",
+        "Stelle eine Ja/Nein-Frage – wer falsch liegt, trinkt",
+        "Mache ein Tiergeräusch – wer lacht, trinkt",
+        "Spiele Luftgitarre für 10 Sekunden",
+        "Zähle 5 Bundesländer – wenn du scheiterst, trink",
+        "Alle, die heute geduscht haben, trinken",
+        "Trinke wie ein Gentleman (kleiner Finger raus)",
+        "Mach eine Grimasse – wer nachmacht, trinkt",
+        "Sage ein Zungenbrecher – bei Fehler trinken",
+        "Trinke mit geschlossenen Augen",
+        "Wähle zwei, die Armdrücken machen – Verlierer trinkt",
+        "Trinke im Ententanz-Modus",
+        "Gib dein Getränk weiter – die Person trinkt für dich",
+        "Stelle dich vor, als wärst du in einer Talkshow",
+        "Alle, die TikTok nutzen, trinken",
+        "Beantworte eine Ja/Nein-Frage ehrlich",
+        "Wähle eine Farbe – wer sie trägt, trinkt",
+        "Führe ein kurzes Rollenspiel auf",
+        "Tu so, als wärst du dein Lieblingscharakter",
+        "Nenne 3 Länder in 5 Sekunden – sonst trink",
+        "Sag dein peinlichstes Schulmoment",
+        "Erfinde ein Wort – und benutze es 3-mal",
+        "Schließe die Augen und rate, wer spricht",
+        "Alle, die ihr Handy griffbereit haben, trinken",
+        "Zeige ein Kindheitsfoto (wenn möglich)",
+        "Nenne dein Lieblingslied und sing 5 Sekunden",
+        "Wähle einen neuen Spitznamen für dich",
+        "Sitze 30 Sekunden still – sonst trink",
+        "Frage jemanden nach seinem peinlichsten Erlebnis",
+        "Trinke auf ex – oder erzähle ein Geheimnis"
+    ];
+
+    const tasksHardcore = [
+      "Zieh ein Kleidungsstück aus oder trink 6 Schlucke",
+      "Tausche Oberteile mit jemandem – sofort",
+      "Leck über den Flaschenhals von jemand anderem",
+      "Lass jemand anderen dein Getränk halten, während du trinkst – mit verbundenen Augen",
+      "Lies den letzten Chat mit deinem Crush laut vor",
+      "Mach 10 Liegestütze – bei Scheitern: Ex dein Getränk",
+      "Erkläre dein peinlichstes Date – oder trinke 5",
+      "Lass jemandem einen Shot aus deinem Bauchnabel trinken (oder tu so!)",
+      "Wähle jemanden, der dir einen Spitznamen gibt – du musst ihn den ganzen Abend tragen",
+      "Tanze auf dem Tisch für 30 Sekunden",
+      "Rufe einen Ex an und sag 'Ich denke an dich' – oder trinke 8",
+      "Sprich 2 Minuten wie ein Baby oder trink 5",
+      "Setz dich einer Person auf den Schoß, bis du wieder dran bist",
+      "Lass jemand dein Getränk mixen – du musst es exen",
+      "Zeig ein Nacktfoto (zensiert) oder trinke 10",
+      "Erkläre mit ernster Stimme, warum du Alkohol liebst",
+      "Mach ein TikTok-Video und poste es sofort oder trinke",
+      "Gib jemandem einen Zungenkuss – oder leer dein Glas",
+      "Stecke dein Handy für 5 Minuten in einen Schuh",
+      "Führe eine Szene aus einem Erotikfilm auf – oder trinke",
+      "Trink mit einem Strohhalm aus dem Glas eines anderen",
+      "Stell eine Frage, die du selbst beantworten musst",
+      "Gib jemandem deinen PIN für 10 Sekunden",
+      "Lass jemanden ein Bild aus deiner Galerie posten",
+      "Mach ein Instagram-Live – mindestens 1 Minute",
+      "Mach ein Selfie mit der Person, die du am wenigsten kennst",
+      "Zieh deine Socken aus und wirf sie in die Runde",
+      "Versuch, ein Schnapsglas mit den Zähnen zu halten und zu trinken",
+      "Beantworte 3 intime Fragen – oder trinke für jede verweigerte",
+      "Lass dir von jemandem ein Tattoo mit Stift aufmalen",
+      "Lass deine Haare von jemandem stylen – blind",
+      "Tausche dein Getränk gegen das eines anderen – ohne Diskussion",
+      "Füge deinem Namen einen neuen Nachnamen hinzu",
+      "Trinke so lange, bis jemand Stopp sagt",
+      "Lass dich für eine Runde mit Eiswürfeln beworfen",
+      "Iss etwas vom Boden (oder so tun als ob)",
+      "Lass dir von jemandem ein Lied vorsingen – bei Lachen trinkst du",
+      "Lass dir auf die Stirn schreiben: 'Ich liebe Shots'",
+      "Alle dürfen dir Fragen stellen – du musst ehrlich antworten",
+      "Zeige deine zuletzt gelöschten Fotos"
     ];
 
     const passOnRules = [
       "Gib den Tag an deinen linken Nachbarn",
-      "Gib den Tag an jemanden, der lacht 😂",
-      "Wähle frei, wer dran ist",
-      "Gib den Tag an die Person mit den wenigsten Schlücken bisher",
-      "Gib den Tag an jemanden mit Brille 👓",
-      "Letzter, der 'Prost!' ruft, muss den Tag nehmen",
-      "Gib den Tag an jemanden, der gerade sein Handy benutzt",
-      "Scanne selbst nochmal – du bist dran!"
+      "Gib den Tag an deinen rechten Nachbarn",
+      "Gib den Tag an jemanden, der gerade lacht",
+      "Gib den Tag an jemanden mit langen Haaren",
+      "Gib den Tag an jemanden mit Brille",
+      "Gib den Tag an die erste Person, die 'Prost' sagt",
+      "Gib den Tag an jemanden, der schon am meisten getrunken hat",
+      "Gib den Tag an jemanden mit Kapuze",
+      "Gib den Tag an die Person mit dem ältesten Handy",
+      "Gib den Tag an jemanden, der neben dir sitzt",
+      "Gib den Tag an jemanden, der rote Kleidung trägt",
+      "Gib den Tag an jemanden, der TikTok auf dem Handy hat",
+      "Gib den Tag an jemanden mit weißen Schuhen",
+      "Gib den Tag an die erste Person, die hüpft",
+      "Gib den Tag an jemanden, der 'Ich bin bereit!' ruft",
+      "Gib den Tag an jemanden, der gerade nichts in der Hand hält",
+      "Gib den Tag an jemanden, der mit dir ein Foto hat",
+      "Gib den Tag an den letzten, der sein Getränk berührt hat",
+      "Gib den Tag an jemanden, der dich zum Lachen bringt",
+      "Gib den Tag an jemanden, der zuletzt sein Handy entsperrt hat"
     ];
 
     function newRound() {
-      const task = tasks[Math.floor(Math.random() * tasks.length)];
+      const hardcore = document.getElementById('hardcoreToggle').checked;
+      const allTasks = hardcore ? tasksNormal.concat(tasksHardcore) : tasksNormal;
+      const task = allTasks[Math.floor(Math.random() * allTasks.length)];
       const passOn = passOnRules[Math.floor(Math.random() * passOnRules.length)];
       document.getElementById('task').textContent = task;
       document.getElementById('passOn').textContent = passOn;
+      document.getElementById('passOn').style.display = 'none';
+      document.getElementById('showPassOnBtn').style.display = 'inline-block';
     }
 
-    // Zeige automatisch beim Laden eine Aufgabe
+    function showPassOn() {
+      document.getElementById('passOn').style.display = 'block';
+      document.getElementById('showPassOnBtn').style.display = 'none';
+    }
+
     window.onload = newRound;
   </script>
 </body>
