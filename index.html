@@ -53,7 +53,7 @@
     button:hover {
       background-color: #ffdbdb;
     }
-  </style>
+</style>
 </head>
 <body>
   <div class="card">
@@ -63,6 +63,23 @@
   </div>
 
   <script>
+    function getRandomGradient() {
+      const colors = [
+        ['#ff8a00', '#e52e71'],
+        ['#00c6ff', '#0072ff'],
+        ['#ff5f6d', '#ffc371'],
+        ['#8e2de2', '#4a00e0'],
+        ['#43cea2', '#185a9d'],
+        ['#ff9966', '#ff5e62'],
+        ['#7F00FF', '#E100FF'],
+        ['#F7971E', '#FFD200'],
+        ['#00F260', '#0575E6'],
+        ['#fc4a1a', '#f7b733']
+      ];
+      const pair = colors[Math.floor(Math.random() * colors.length)];
+      return `linear-gradient(135deg, ${pair[0]}, ${pair[1]})`;
+    }
+
     const allTasks = [
       "Trinke 2 Schlucke",
       "Tausche dein Getränk mit deinem linken Nachbarn",
@@ -183,7 +200,9 @@
       document.getElementById('showPassOnBtn').style.display = 'none';
     }
 
+
     window.onload = () => {
+      document.body.style.background = getRandomGradient();
       const task = allTasks[Math.floor(Math.random() * allTasks.length)];
       const passOn = passOnRules[Math.floor(Math.random() * passOnRules.length)];
       document.getElementById('task').textContent = task;
