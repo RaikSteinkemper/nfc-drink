@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NFC Trinkspiel</title>
   <style>
-    body{
+    body {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -16,7 +16,6 @@
       text-align: center;
       color: white;
     }
-
     .card {
       background: rgba(255, 255, 255, 0.1);
       padding: 2rem;
@@ -54,97 +53,66 @@
     button:hover {
       background-color: #ffdbdb;
     }
-    .toggle-container {
-      margin: 1.5rem 0 0.5rem;
-    }
-    .toggle-container input[type="checkbox"] {
-      display: none;
-    }
-    .toggle-label {
-      display: inline-block;
-      background: white;
-      color: #e52e71;
-      padding: 0.5rem 1rem;
-      border-radius: 999px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: background 0.2s;
-    }
-    .toggle-label:hover {
-      background: #ffdbdb;
-    }
-    .toggle-container input[type="checkbox"]:checked + .toggle-label {
-      background: #e52e71;
-      color: white;
-    }
   </style>
 </head>
 <body>
   <div class="card">
-    <div class="task" id="task">Scanne den NFC-Tag oder starte eine Runde!</div>
-    <button onclick="newRound()">🎲 Neue Aufgabe</button>
+    <div class="task" id="task"></div>
     <div class="pass-on" id="passOn"></div>
-    <button onclick="showPassOn()" id="showPassOnBtn" style="display:none;">👉 Weitergabe anzeigen</button>
-    <div class="toggle-container">
-      <input type="checkbox" id="hardcoreToggle">
-      <label for="hardcoreToggle" class="toggle-label">🧨 Hardcore-Modus</label>
-    </div>
+    <button onclick="showPassOn()" id="showPassOnBtn">👉 Weitergabe anzeigen</button>
   </div>
 
   <script>
-    const tasksNormal = [
-        "Trinke 2 Schlucke",
-        "Tausche dein Getränk mit deinem linken Nachbarn",
-        "Erfinde eine neue Regel",
-        "Sing ein Lied oder trink 3 Schlucke",
-        "Alle mit weißen Socken trinken",
-        "Stelle dem nächsten eine peinliche Frage",
-        "Wähle jemanden, der trinken muss",
-        "Letzter, der aufsteht, trinkt",
-        "Erzähle eine peinliche Geschichte",
-        "Mache jemandem ein Kompliment",
-        "Spiele eine Runde Flaschendrehen",
-        "Sprich 10 Sekunden in einer fremden Sprache",
-        "Sage das Alphabet rückwärts",
-        "Stelle dich pantomimisch dar – alle müssen raten",
-        "Trinke mit der schwachen Hand",
-        "Erzähle deinen Spitznamen aus der Kindheit",
-        "Führe einen TikTok-Tanz vor",
-        "Alle mit Jeans trinken",
-        "Zeige dein Lieblingsfoto auf dem Handy",
-        "Imitiere einen Promi – alle müssen raten",
-        "Stelle eine Ja/Nein-Frage – wer falsch liegt, trinkt",
-        "Mache ein Tiergeräusch – wer lacht, trinkt",
-        "Spiele Luftgitarre für 10 Sekunden",
-        "Zähle 5 Bundesländer – wenn du scheiterst, trink",
-        "Alle, die heute geduscht haben, trinken",
-        "Trinke wie ein Gentleman (kleiner Finger raus)",
-        "Mach eine Grimasse – wer nachmacht, trinkt",
-        "Sage ein Zungenbrecher – bei Fehler trinken",
-        "Trinke mit geschlossenen Augen",
-        "Wähle zwei, die Armdrücken machen – Verlierer trinkt",
-        "Trinke im Ententanz-Modus",
-        "Gib dein Getränk weiter – die Person trinkt für dich",
-        "Stelle dich vor, als wärst du in einer Talkshow",
-        "Alle, die TikTok nutzen, trinken",
-        "Beantworte eine Ja/Nein-Frage ehrlich",
-        "Wähle eine Farbe – wer sie trägt, trinkt",
-        "Führe ein kurzes Rollenspiel auf",
-        "Tu so, als wärst du dein Lieblingscharakter",
-        "Nenne 3 Länder in 5 Sekunden – sonst trink",
-        "Sag dein peinlichstes Schulmoment",
-        "Erfinde ein Wort – und benutze es 3-mal",
-        "Schließe die Augen und rate, wer spricht",
-        "Alle, die ihr Handy griffbereit haben, trinken",
-        "Zeige ein Kindheitsfoto (wenn möglich)",
-        "Nenne dein Lieblingslied und sing 5 Sekunden",
-        "Wähle einen neuen Spitznamen für dich",
-        "Sitze 30 Sekunden still – sonst trink",
-        "Frage jemanden nach seinem peinlichsten Erlebnis",
-        "Trinke auf ex – oder erzähle ein Geheimnis"
-    ];
-
-    const tasksHardcore = [
+    const allTasks = [
+      "Trinke 2 Schlucke",
+      "Tausche dein Getränk mit deinem linken Nachbarn",
+      "Erfinde eine neue Regel",
+      "Sing ein Lied oder trink 3 Schlucke",
+      "Alle mit weißen Socken trinken",
+      "Stelle dem nächsten eine peinliche Frage",
+      "Wähle jemanden, der trinken muss",
+      "Letzter, der aufsteht, trinkt",
+      "Erzähle eine peinliche Geschichte",
+      "Mache jemandem ein Kompliment",
+      "Spiele eine Runde Flaschendrehen",
+      "Sprich 10 Sekunden in einer fremden Sprache",
+      "Sage das Alphabet rückwärts",
+      "Stelle dich pantomimisch dar – alle müssen raten",
+      "Trinke mit der schwachen Hand",
+      "Erzähle deinen Spitznamen aus der Kindheit",
+      "Führe einen TikTok-Tanz vor",
+      "Alle mit Jeans trinken",
+      "Zeige dein Lieblingsfoto auf dem Handy",
+      "Imitiere einen Promi – alle müssen raten",
+      "Stelle eine Ja/Nein-Frage – wer falsch liegt, trinkt",
+      "Mache ein Tiergeräusch – wer lacht, trinkt",
+      "Spiele Luftgitarre für 10 Sekunden",
+      "Zähle 5 Bundesländer – wenn du scheiterst, trink",
+      "Alle, die heute geduscht haben, trinken",
+      "Trinke wie ein Gentleman (kleiner Finger raus)",
+      "Mach eine Grimasse – wer nachmacht, trinkt",
+      "Sage ein Zungenbrecher – bei Fehler trinken",
+      "Trinke mit geschlossenen Augen",
+      "Wähle zwei, die Armdrücken machen – Verlierer trinkt",
+      "Trinke im Ententanz-Modus",
+      "Gib dein Getränk weiter – die Person trinkt für dich",
+      "Stelle dich vor, als wärst du in einer Talkshow",
+      "Alle, die TikTok nutzen, trinken",
+      "Beantworte eine Ja/Nein-Frage ehrlich",
+      "Wähle eine Farbe – wer sie trägt, trinkt",
+      "Führe ein kurzes Rollenspiel auf",
+      "Tu so, als wärst du dein Lieblingscharakter",
+      "Nenne 3 Länder in 5 Sekunden – sonst trink",
+      "Sag dein peinlichstes Schulmoment",
+      "Erfinde ein Wort – und benutze es 3-mal",
+      "Schließe die Augen und rate, wer spricht",
+      "Alle, die ihr Handy griffbereit haben, trinken",
+      "Zeige ein Kindheitsfoto (wenn möglich)",
+      "Nenne dein Lieblingslied und sing 5 Sekunden",
+      "Wähle einen neuen Spitznamen für dich",
+      "Sitze 30 Sekunden still – sonst trink",
+      "Frage jemanden nach seinem peinlichsten Erlebnis",
+      "Trinke auf ex – oder erzähle ein Geheimnis",
       "Zieh ein Kleidungsstück aus oder trink 6 Schlucke",
       "Tausche Oberteile mit jemandem – sofort",
       "Leck über den Flaschenhals von jemand anderem",
@@ -210,23 +178,17 @@
       "Gib den Tag an jemanden, der zuletzt sein Handy entsperrt hat"
     ];
 
-    function newRound() {
-      const hardcore = document.getElementById('hardcoreToggle').checked;
-      const allTasks = hardcore ? tasksNormal.concat(tasksHardcore) : tasksNormal;
-      const task = allTasks[Math.floor(Math.random() * allTasks.length)];
-      const passOn = passOnRules[Math.floor(Math.random() * passOnRules.length)];
-      document.getElementById('task').textContent = task;
-      document.getElementById('passOn').textContent = passOn;
-      document.getElementById('passOn').style.display = 'none';
-      document.getElementById('showPassOnBtn').style.display = 'inline-block';
-    }
-
     function showPassOn() {
       document.getElementById('passOn').style.display = 'block';
       document.getElementById('showPassOnBtn').style.display = 'none';
     }
 
-    window.onload = newRound;
+    window.onload = () => {
+      const task = allTasks[Math.floor(Math.random() * allTasks.length)];
+      const passOn = passOnRules[Math.floor(Math.random() * passOnRules.length)];
+      document.getElementById('task').textContent = task;
+      document.getElementById('passOn').textContent = passOn;
+    };
   </script>
 </body>
 </html>
