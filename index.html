@@ -71,6 +71,7 @@
           document.body.innerHTML = "<h2>Zugriff verweigert</h2><p>Nur über den echten NFC-Tag möglich.</p>";
           throw new Error("Unerlaubter Zugriff");
       }
+
     function getRandomGradient() {
       const colors = [
         ['#ff8a00', '#e52e71'],
@@ -210,6 +211,10 @@
 
 
     window.onload = () => {
+      if (window.history.replaceState) {
+        const cleanUrl = window.location.origin + window.location.pathname;
+        window.history.replaceState({}, document.title, cleanUrl);
+      }
       document.body.style.background = getRandomGradient();
       const task = allTasks[Math.floor(Math.random() * allTasks.length)];
       const passOn = passOnRules[Math.floor(Math.random() * passOnRules.length)];
