@@ -63,6 +63,14 @@
   </div>
 
   <script>
+      const validTokens = ["696969"];
+      const urlParams = new URLSearchParams(window.location.search);
+      const token = urlParams.get("token");
+
+      if (!validTokens.includes(token)) {
+          document.body.innerHTML = "<h2>Zugriff verweigert</h2><p>Nur über den echten NFC-Tag möglich.</p>";
+          throw new Error("Unerlaubter Zugriff");
+      }
     function getRandomGradient() {
       const colors = [
         ['#ff8a00', '#e52e71'],
