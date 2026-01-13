@@ -59,6 +59,7 @@
   <div class="card">
     <div class="task" id="task"></div>
     <div class="pass-on" id="passOn"></div>
+    <button onclick="rollTask()" id="rollBtn">🎲 Neu würfeln</button>
     <button onclick="showPassOn()" id="showPassOnBtn">👉 Weitergabe anzeigen</button>
   </div>
 
@@ -353,17 +354,23 @@
       document.getElementById('showPassOnBtn').style.display = 'none';
     }
 
+    function rollTask() {
+      document.body.style.background = getRandomGradient();
+      const task = allTasks[Math.floor(Math.random() * allTasks.length)];
+      const passOn = passOnRules[Math.floor(Math.random() * passOnRules.length)];
+      document.getElementById('task').textContent = task;
+      document.getElementById('passOn').textContent = passOn;
+      document.getElementById('passOn').style.display = 'none';
+      document.getElementById('showPassOnBtn').style.display = 'inline-block';
+    }
+
 
     window.onload = () => {
       if (window.history.replaceState) {
         const cleanUrl = window.location.origin + window.location.pathname;
         window.history.replaceState({}, document.title, cleanUrl);
       }
-      document.body.style.background = getRandomGradient();
-      const task = allTasks[Math.floor(Math.random() * allTasks.length)];
-      const passOn = passOnRules[Math.floor(Math.random() * passOnRules.length)];
-      document.getElementById('task').textContent = task;
-      document.getElementById('passOn').textContent = passOn;
+      rollTask();
     };
   </script>
 </body>
