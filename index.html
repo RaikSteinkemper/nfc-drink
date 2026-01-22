@@ -129,74 +129,30 @@
           throw new Error("Unerlaubter Zugriff");
       }
 
-      const partyLogo = `<svg viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="rainbowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:#ff6b6b;stop-opacity:1" />
-            <stop offset="25%" style="stop-color:#ffd93d;stop-opacity:1" />
-            <stop offset="50%" style="stop-color:#6bcf7f;stop-opacity:1" />
-            <stop offset="75%" style="stop-color:#4d96ff;stop-opacity:1" />
-            <stop offset="100%" style="stop-color:#d946ef;stop-opacity:1" />
-          </linearGradient>
-        </defs>
-        <!-- Circles background -->
-        <circle cx="100" cy="100" r="85" fill="none" stroke="url(#rainbowGrad)" stroke-width="6" opacity="0.6"/>
-        <circle cx="100" cy="100" r="70" fill="none" stroke="url(#rainbowGrad)" stroke-width="3" opacity="0.4"/>
-        <!-- Glass with sound waves -->
-        <rect x="70" y="90" width="60" height="70" rx="8" fill="none" stroke="#1a1a2e" stroke-width="3"/>
-        <path d="M 50 110 Q 45 120 50 130" fill="none" stroke="#c41e3a" stroke-width="3" stroke-linecap="round"/>
-        <path d="M 40 100 Q 33 115 40 130" fill="none" stroke="#c41e3a" stroke-width="3" stroke-linecap="round"/>
-        <path d="M 60 100 Q 53 115 60 130" fill="none" stroke="#c41e3a" stroke-width="3" stroke-linecap="round"/>
-        <!-- Party hat -->
-        <polygon points="130,85 145,60 140,85" fill="#ff6b6b"/>
-        <polygon points="140,85 155,75 150,85" fill="#ffd93d"/>
-        <polygon points="150,85 160,60 155,85" fill="#6bcf7f"/>
-        <!-- Hat ball -->
-        <circle cx="147" cy="58" r="4" fill="#ff1493"/>
-        <!-- Decorative elements -->
-        <circle cx="60" cy="50" r="3" fill="#ffd93d"/>
-        <polygon points="85,45 88,50 82,50" fill="#ff6b6b"/>
-        <circle cx="110" cy="40" r="3.5" fill="#4d96ff"/>
-        <polygon points="130,48 132,53 128,53" fill="#6bcf7f"/>
-        <circle cx="145" cy="50" r="2.5" fill="#ffd93d"/>
-        <polygon points="70,160 72,165 68,165" fill="#ff6b6b"/>
-        <circle cx="100" cy="165" r="3" fill="#4d96ff"/>
-        <polygon points="130,160 133,166 127,166" fill="#6bcf7f"/>
-        <circle cx="55" cy="140" r="2.5" fill="#ffd93d"/>
-      </svg>`;
-
-      const naughtyLogo = `<svg viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg">
-        <!-- Horns -->
-        <path d="M 95 70 Q 85 40 75 50" fill="none" stroke="#8b0000" stroke-width="5" stroke-linecap="round"/>
-        <path d="M 105 70 Q 115 40 125 50" fill="none" stroke="#8b0000" stroke-width="5" stroke-linecap="round"/>
-        <polygon points="75,50 70,48 78,55" fill="#8b0000"/>
-        <polygon points="125,50 130,48 122,55" fill="#8b0000"/>
-        <!-- Glass outline -->
-        <rect x="65" y="85" width="70" height="75" rx="10" fill="none" stroke="#1a1a2e" stroke-width="3.5"/>
-        <!-- Liquid inside -->
-        <rect x="67" y="120" width="66" height="38" rx="8" fill="#c41e3a" opacity="0.8"/>
-        <!-- Highlight on glass -->
-        <ellipse cx="78" cy="95" rx="6" ry="12" fill="white" opacity="0.4"/>
-        <!-- Sound waves -->
-        <path d="M 45 110 Q 40 120 45 130" fill="none" stroke="#c41e3a" stroke-width="3" stroke-linecap="round"/>
-        <path d="M 35 100 Q 28 115 35 130" fill="none" stroke="#c41e3a" stroke-width="3" stroke-linecap="round"/>
-        <path d="M 55 100 Q 48 115 55 130" fill="none" stroke="#c41e3a" stroke-width="3" stroke-linecap="round"/>
-        <!-- Tail -->
-        <path d="M 125 155 Q 145 160 155 145" fill="none" stroke="#c41e3a" stroke-width="3" stroke-linecap="round"/>
-        <polygon points="155,145 160,140 152,148" fill="#c41e3a"/>
-        <!-- Text background hint -->
-      </svg>`;
-
       function setEditionLogo() {
         const logoContainer = document.getElementById('logoContainer');
         const titleContainer = document.getElementById('editionTitle');
         
         if (currentEdition === 'party') {
-          logoContainer.innerHTML = partyLogo;
+          logoContainer.innerHTML = '<img src="party-edition.svg" alt="Party Edition" style="width: 100%; height: 100%; object-fit: contain;">';
           titleContainer.innerHTML = '🎉 Party Edition';
           titleContainer.style.color = '#fff';
         } else if (currentEdition === 'naughty') {
-          logoContainer.innerHTML = naughtyLogo;
+          logoContainer.innerHTML = '<img src="naughty-edition.svg" alt="Naughty Edition" style="width: 100%; height: 100%; object-fit: contain;">';
+          titleContainer.innerHTML = '🔥 Naughty Edition';
+          titleContainer.style.color = '#ffb3ba';
+        }
+      }
+
+    function getRandomGradient() {        const logoContainer = document.getElementById('logoContainer');
+        const titleContainer = document.getElementById('editionTitle');
+        
+        if (currentEdition === 'party') {
+          logoContainer.innerHTML = '<img src="party-edition.svg" alt="Party Edition" style="width: 100%; height: 100%; object-fit: contain;">';
+          titleContainer.innerHTML = '🎉 Party Edition';
+          titleContainer.style.color = '#fff';
+        } else if (currentEdition === 'naughty') {
+          logoContainer.innerHTML = '<img src="naughty-edition.svg" alt="Naughty Edition" style="width: 100%; height: 100%; object-fit: contain;">';
           titleContainer.innerHTML = '🔥 Naughty Edition';
           titleContainer.style.color = '#ffb3ba';
         }
