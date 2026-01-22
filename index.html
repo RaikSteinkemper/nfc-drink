@@ -53,10 +53,60 @@
     button:hover {
       background-color: #ffdbdb;
     }
+    .logo-container {
+      margin-bottom: 1.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .logo {
+      width: 140px;
+      height: 140px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .logo svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+    }
+    .edition-title {
+      font-size: 1.3rem;
+      margin-top: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+    @media (max-width: 480px) {
+      .card {
+        padding: 1.5rem;
+        max-width: 100%;
+        margin: 10px;
+      }
+      .logo {
+        width: 110px;
+        height: 110px;
+      }
+      .task, .pass-on {
+        font-size: 1.3rem;
+        margin: 1rem 0;
+      }
+      .edition-title {
+        font-size: 1.1rem;
+      }
+      button {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+      }
+    }
 </style>
 </head>
 <body>
   <div class="card">
+    <div class="logo-container">
+      <div class="logo" id="logoContainer"></div>
+    </div>
+    <div class="edition-title" id="editionTitle"></div>
     <div class="task" id="task"></div>
     <div class="pass-on" id="passOn"></div>
     <button onclick="rollTask()" id="rollBtn">🎲 Neu würfeln</button>
@@ -64,13 +114,92 @@
   </div>
 
   <script>
-      const validTokens = ["696969"];
+      const partyToken = "696969";
+      const naughtyToken = "696970";
       const urlParams = new URLSearchParams(window.location.search);
       const token = urlParams.get("token");
+      let currentEdition = null;
 
-      if (!validTokens.includes(token)) {
+      if (token === partyToken) {
+          currentEdition = 'party';
+      } else if (token === naughtyToken) {
+          currentEdition = 'naughty';
+      } else {
           document.body.innerHTML = "<h2>Zugriff verweigert</h2><p>Nur über den echten NFC-Tag möglich.</p>";
           throw new Error("Unerlaubter Zugriff");
+      }
+
+      const partyLogo = `<svg viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="rainbowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#ff6b6b;stop-opacity:1" />
+            <stop offset="25%" style="stop-color:#ffd93d;stop-opacity:1" />
+            <stop offset="50%" style="stop-color:#6bcf7f;stop-opacity:1" />
+            <stop offset="75%" style="stop-color:#4d96ff;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#d946ef;stop-opacity:1" />
+          </linearGradient>
+        </defs>
+        <!-- Circles background -->
+        <circle cx="100" cy="100" r="85" fill="none" stroke="url(#rainbowGrad)" stroke-width="6" opacity="0.6"/>
+        <circle cx="100" cy="100" r="70" fill="none" stroke="url(#rainbowGrad)" stroke-width="3" opacity="0.4"/>
+        <!-- Glass with sound waves -->
+        <rect x="70" y="90" width="60" height="70" rx="8" fill="none" stroke="#1a1a2e" stroke-width="3"/>
+        <path d="M 50 110 Q 45 120 50 130" fill="none" stroke="#c41e3a" stroke-width="3" stroke-linecap="round"/>
+        <path d="M 40 100 Q 33 115 40 130" fill="none" stroke="#c41e3a" stroke-width="3" stroke-linecap="round"/>
+        <path d="M 60 100 Q 53 115 60 130" fill="none" stroke="#c41e3a" stroke-width="3" stroke-linecap="round"/>
+        <!-- Party hat -->
+        <polygon points="130,85 145,60 140,85" fill="#ff6b6b"/>
+        <polygon points="140,85 155,75 150,85" fill="#ffd93d"/>
+        <polygon points="150,85 160,60 155,85" fill="#6bcf7f"/>
+        <!-- Hat ball -->
+        <circle cx="147" cy="58" r="4" fill="#ff1493"/>
+        <!-- Decorative elements -->
+        <circle cx="60" cy="50" r="3" fill="#ffd93d"/>
+        <polygon points="85,45 88,50 82,50" fill="#ff6b6b"/>
+        <circle cx="110" cy="40" r="3.5" fill="#4d96ff"/>
+        <polygon points="130,48 132,53 128,53" fill="#6bcf7f"/>
+        <circle cx="145" cy="50" r="2.5" fill="#ffd93d"/>
+        <polygon points="70,160 72,165 68,165" fill="#ff6b6b"/>
+        <circle cx="100" cy="165" r="3" fill="#4d96ff"/>
+        <polygon points="130,160 133,166 127,166" fill="#6bcf7f"/>
+        <circle cx="55" cy="140" r="2.5" fill="#ffd93d"/>
+      </svg>`;
+
+      const naughtyLogo = `<svg viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg">
+        <!-- Horns -->
+        <path d="M 95 70 Q 85 40 75 50" fill="none" stroke="#8b0000" stroke-width="5" stroke-linecap="round"/>
+        <path d="M 105 70 Q 115 40 125 50" fill="none" stroke="#8b0000" stroke-width="5" stroke-linecap="round"/>
+        <polygon points="75,50 70,48 78,55" fill="#8b0000"/>
+        <polygon points="125,50 130,48 122,55" fill="#8b0000"/>
+        <!-- Glass outline -->
+        <rect x="65" y="85" width="70" height="75" rx="10" fill="none" stroke="#1a1a2e" stroke-width="3.5"/>
+        <!-- Liquid inside -->
+        <rect x="67" y="120" width="66" height="38" rx="8" fill="#c41e3a" opacity="0.8"/>
+        <!-- Highlight on glass -->
+        <ellipse cx="78" cy="95" rx="6" ry="12" fill="white" opacity="0.4"/>
+        <!-- Sound waves -->
+        <path d="M 45 110 Q 40 120 45 130" fill="none" stroke="#c41e3a" stroke-width="3" stroke-linecap="round"/>
+        <path d="M 35 100 Q 28 115 35 130" fill="none" stroke="#c41e3a" stroke-width="3" stroke-linecap="round"/>
+        <path d="M 55 100 Q 48 115 55 130" fill="none" stroke="#c41e3a" stroke-width="3" stroke-linecap="round"/>
+        <!-- Tail -->
+        <path d="M 125 155 Q 145 160 155 145" fill="none" stroke="#c41e3a" stroke-width="3" stroke-linecap="round"/>
+        <polygon points="155,145 160,140 152,148" fill="#c41e3a"/>
+        <!-- Text background hint -->
+      </svg>`;
+
+      function setEditionLogo() {
+        const logoContainer = document.getElementById('logoContainer');
+        const titleContainer = document.getElementById('editionTitle');
+        
+        if (currentEdition === 'party') {
+          logoContainer.innerHTML = partyLogo;
+          titleContainer.innerHTML = '🎉 Party Edition';
+          titleContainer.style.color = '#fff';
+        } else if (currentEdition === 'naughty') {
+          logoContainer.innerHTML = naughtyLogo;
+          titleContainer.innerHTML = '🔥 Naughty Edition';
+          titleContainer.style.color = '#ffb3ba';
+        }
       }
 
     function getRandomGradient() {
@@ -90,7 +219,8 @@
       return `linear-gradient(135deg, ${pair[0]}, ${pair[1]})`;
     }
 
-    const allTasks = [
+    const allTasks = {
+      party: [
       "Trinke 2 Schlücke",
       "Tausche dein Getränk mit deinem linken Nachbarn",
       "Erfinde eine neue Regel",
@@ -253,8 +383,93 @@
         "Hast du jemanden aus der Runde nackt gesehen? Oder trinke 3 Schlucke",
         "Warst du in der Schulzeit in einen Lehrer verliebt? Oder trinke 3 Schlucke",
         "Jeder nennt dir ein Wort. Bilde daraus einen lustigen Satz – oder trinke 3",
-
-    ];
+      ],
+      naughty: [
+        "Was ist dein Bodycount?",
+        "Erzähle deine wildest Sex Story",
+        "Nenne das intimste, das dir je mit jemandem passiert ist",
+        "Welche sexuelle Fantasie schämst du dich am meisten?",
+        "Hast du je jemanden betrogen? Erzähle",
+        "Was ist das Verrückteste, das du nackt gemacht hast?",
+        "Mit wie vielen Personen hast du schon geschlafen? Ehrlich!",
+        "Beschreibe deinen besten One-Night-Stand",
+        "Hast du einen Fetisch? Welchen?",
+        "Welcher Promi ist dein sexueller Freund?",
+        "Hast du schon mal beim Sex abgelenkt gedacht?",
+        "Was ist deine heikelste sexuelle Vorstellung?",
+        "Hast du schon mal Nacktfotos gemacht? Für wen?",
+        "Wie oft onaniertst du ungefähr pro Woche?",
+        "Hast du schon mal mit deinem besten Freund geschlafen?",
+        "Würde du deinen Ex wieder nehmen? Sex ja, Beziehung nein?",
+        "Was ist das Schlimmste beim Sex bei dir?",
+        "Hattest du schon ein Abenteuer im Auto?",
+        "Würdest du mit zwei Personen gleichzeitig gehen?",
+        "Beschreib deinen idealen One-Night-Stand",
+        "Hast du schon mal wen während der Arbeit beeindrucken wollen?",
+        "Wie verführst du jemanden, den du magst?",
+        "War dein erstes Mal gut? Erzähle kurz",
+        "Hast du schon mal jemanden beobachtet?",
+        "Wie oft denkst du am Tag an Sex?",
+        "Hast du die größten Lügen beim Sex erzählt?",
+        "Mit welchem Promi würdest du am liebsten schlafen?",
+        "Auf welcher Liste stehst du bei deinen Exes?",
+        "Hast du schon mal auf einer Party/im Club geschlafen?",
+        "Beschreibt den heißesten Moment aus deinem Leben",
+        "Würdest du dir ein Video von dir anschauen?",
+        "Was würde dich schockieren, wenn deine Mutter es wüsste?",
+        "Erzähle von deinem peinlichstem Sexual-Erlebnis",
+        "Was ist deine schlimmste sexuelle Erfahrung?",
+        "Trinke einen Shot und offenbare ein dunkles Geheimnis",
+        "Wie lange schaffst du Augenkontakt während ich eine Frage stelle?",
+        "Wer im Raum hat die beste Aura? (Sexuelle Anziehung)",
+        "Würdest du mit jemandem im Raum schlafen? Mit wem?",
+        "Nenne deine Top 3 sexuelle Sünde",
+        "Warst du schon mal in Versuchung fremd zu gehen?",
+        "Wie oft duscht du nackt und denkst an Sex?",
+        "Würdest du Nacktbilder für Geld verkaufen?",
+        "Hast du schon mal mit jemandem live getextet?",
+        "Wo hattest du den wildesten Sex außer im Bett?",
+        "Welche bekannte Person hast du geträumt?",
+        "Hast du schon mal gelogen um jemanden zu verführen?",
+        "Magst du es dominant oder unterwürfig zu sein?",
+        "Wie viele Personen sind zu viele für ein Abenteuer?",
+        "Beschreib einen Ort an dem du gerne Sex hättest",
+        "Brauchst du Hilfe um in Stimmung zu kommen?",
+        "Würdest du für einen sehr attraktiven Menschen liegen?",
+        "Hast du je versucht jemanden zu verführen? Erfolgreich?",
+        "Wer in diesem Raum ist dein Typ? Erzähle warum",
+        "Würde dein Partner es wissen wollen, was du magst?",
+        "Brauchst du viel Kommunikation beim Sex?",
+        "Hast du jemals Sex ohne Gefühle gehabt?",
+        "Wie würdest du jemanden verführen, der widerstrebend ist?",
+        "Hast du schon mal sexuelle Szenen nachgespielt?",
+        "Wer hat den besten Po im Raum? (ehrlich!)",
+        "Trink wenn du schon mal beim Sex unterbrochen wurdest",
+        "Trink wenn dir schon mal ein Sperma im Mund war",
+        "Trink wenn du schon mal einen Blowjob gegeben hast",
+        "Trink wenn du schon mal oral befriedigt wurdest",
+        "Trink wenn du schon mal Sex im Wasser hattest",
+        "Trink wenn du schon mal Handsex gegeben hast",
+        "Trink wenn du schon mal in einer öffentlichen Toilette Sex hattest",
+        "Trink wenn du schon mal während deiner Periode Sex hattest",
+        "Trink wenn dich schon mal jemand beobachtet hat beim Sex",
+        "Trink wenn du schon mal Sex mit jemand älterem hattest",
+        "Trink wenn deine Eltern dich fast beim Sex überrascht hätten",
+        "Trink wenn du schon mal geheuchelst hast beim Höhepunkt",
+        "Trink wenn du schon mal mit einem Toy allein warst",
+        "Trink wenn du schon mal nackt fotografiert wurdest",
+        "Trink wenn du schon mal jemanden mit Absicht verführt hast",
+        "Trink wenn du beim Sex schon Angst hattest erwischt zu werden",
+        "Trink wenn du schon mal fremde Unterwäsche getragen hast",
+        "Trink wenn du schon mal einen Traum vom Sex hattest",
+        "Trink wenn deine Sicherheitsmaßnahmen schon fehlgeschlagen sind",
+        "Trink wenn du dich selbst schon heimlich beobachtet hast",
+        "Trink wenn du schon mal versprochen hast zu schweigen",
+        "Trink wenn dir schon mal jemand Nacktfotos schickte",
+        "Trink wenn du einen Porno vor jemandem verstecken musstest",
+        "Trink wenn du schon mal Sex mit Fremden hattest"
+      ]
+    };
 
     const passOnRules = [
       "Gib den Tag an deinen linken Nachbarn",
@@ -356,7 +571,8 @@
 
     function rollTask() {
       document.body.style.background = getRandomGradient();
-      const task = allTasks[Math.floor(Math.random() * allTasks.length)];
+      const tasks = allTasks[currentEdition];
+      const task = tasks[Math.floor(Math.random() * tasks.length)];
       const passOn = passOnRules[Math.floor(Math.random() * passOnRules.length)];
       document.getElementById('task').textContent = task;
       document.getElementById('passOn').textContent = passOn;
@@ -370,6 +586,7 @@
         const cleanUrl = window.location.origin + window.location.pathname;
         window.history.replaceState({}, document.title, cleanUrl);
       }
+      setEditionLogo();
       rollTask();
     };
   </script>
